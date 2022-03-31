@@ -4,9 +4,9 @@ import { schedule } from "node-cron";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { sample } from "lodash"
 
-type Response =                "sleeping" | "under bed" | "jackson" | "poll" | "illegible" | "bHGVw" | "zXgy" | "bAeVN" | 
+type Response =                "sleeping" | "under bed" | "jackson" | "poll" | "illegible" | "bHGVw" | "zXgy" | "bAeVN" | "toes" | "9am" | "funfact" |
                                       "-15";
-const responses: Response[] = ["sleeping" , "under bed" , "jackson" , "poll" , "illegible" , "bHGVw" , "zXgy" , "bAeVN"];
+const responses: Response[] = ["sleeping" , "under bed" , "jackson" , "poll" , "illegible" , "bHGVw" , "zXgy" , "bAeVN" , "toes" , "9am" , "funfact"];
 const mentionResponses: Response[] = ["-15"];
 
 const CHANNELS_PATH = "channels.json";
@@ -71,6 +71,7 @@ async function send2AM(guild: Guild, channel: TextChannel) {
         .filter(response => !lastResponses.includes(response));
 
     const response = sample(usableResponses)!!;
+    // const response: string = "9am";
 
     writeLastResponses(lastResponses.length !== 3 ? 
         (
@@ -79,7 +80,6 @@ async function send2AM(guild: Guild, channel: TextChannel) {
             [...lastResponses.slice(1), response]
         ))
 
-    // const response: string = "-15";
 
     if (response === "sleeping")
         return await channel.send("James is sleeping in the Esports centre right now");
@@ -112,7 +112,20 @@ async function send2AM(guild: Guild, channel: TextChannel) {
     if (response === "bAeVN")
         return await channel.send("https://tenor.com/bAeVN.gif");
 
-    assertNever(response);
+    if (response === "toes")
+        return await channel.send("Get to bed or your toes will be gobbled");
+
+    if (response === "funfact")
+        return await channel.send("Fun Fact! Did you know that people who stay awake gaming are found to be less likely to be attractive to their preferred gender?");
+
+    if (response === "9am") {
+        const hours = new Date().getHours();
+
+        const hoursTill9AM = hours < 9 ? 9 - hours : 33 - hours
+        return await channel.send(`There are ${hoursTill9AM} hours until your 9am tomorrow :) Maybe get some sleep`)
+    }
+
+    // assertNever(response);
 }
 
 async function getVCUsers(guild: Guild) {
@@ -155,10 +168,10 @@ client.once("ready", () => {
 client.on("interactionCreate", async interaction => {
     if (!interaction.isCommand()) return;
 
-    if (!interaction.memberPermissions?.has([Permissions.FLAGS.ADMINISTRATOR])) {
-        interaction.reply({content: "admin only", ephemeral: true});
-        return;
-    }
+    // if (!interaction.memberPermissions?.has([Permissions.FLAGS.ADMINISTRATOR])) {
+    //     interaction.reply({content: "admin only", ephemeral: true});
+    //     return;
+    // }
 
     if (interaction.guildId) {
         const channelsToSend = readChannelsToSend();
