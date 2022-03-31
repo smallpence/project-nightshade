@@ -196,7 +196,7 @@ client.on("interactionCreate", async interaction => {
     } else interaction.reply({content: "no private messages please", ephemeral: true});
 });
 
-schedule('1 * * * *', async () => {
+schedule('0 * * * *', async () => {
     findChannels();
 });
 
