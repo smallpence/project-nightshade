@@ -4,9 +4,9 @@ import { schedule } from "node-cron";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { sample } from "lodash"
 
-type Response =                "sleeping" | "under bed" | "jackson" | "poll" | "illegible" | "bHGVw" | "zXgy" | "bAeVN" | "toes" | "9am" | "funfact" |
+type Response =                "sleeping" | "under bed" | "jackson" | "poll" | "illegible" | "bHGVw" | "zXgy" | "bAeVN" | "toes" | "9am" | "funfact" | "eggman" | "rem" | "nightman" | "spotify" | "rember" |
                                       "-15";
-const responses: Response[] = ["sleeping" , "under bed" , "jackson" , "poll" , "illegible" , "bHGVw" , "zXgy" , "bAeVN" , "toes" , "9am" , "funfact"];
+const responses: Response[] = ["sleeping" , "under bed" , "jackson" , "poll" , "illegible" , "bHGVw" , "zXgy" , "bAeVN" , "toes" , "9am" , "funfact" , "eggman" , "rem" , "nightman" , "spotify" , "rember"];
 const mentionResponses: Response[] = ["-15"];
 
 const CHANNELS_PATH = "channels.json";
@@ -82,7 +82,7 @@ async function send2AM(guild: Guild, channel: TextChannel) {
 
 
     if (response === "sleeping")
-        return await channel.send("James is sleeping in the Esports centre right now");
+        return await channel.send("<@175351872822050816> is sleeping in the Esports centre right now");
 
     if (response === "under bed")
         return await channel.send("Check under your bed tonight!");
@@ -122,10 +122,27 @@ async function send2AM(guild: Guild, channel: TextChannel) {
         const hours = new Date().getHours();
 
         const hoursTill9AM = hours < 9 ? 9 - hours : 33 - hours
-        return await channel.send(`There are ${hoursTill9AM} hours until your 9am tomorrow :) Maybe get some sleep`)
+        return await channel.send(`There are ${hoursTill9AM} hours until your 9am tomorrow :) Maybe get some sleep`);
     }
 
-    // assertNever(response);
+    if (response === "eggman") {
+        await channel.send("I've come to make an announcement; The Sandman's a bitch ass motherfucker, he dream cucked my fucking wife. Thats right, he took his Scandinavian bag of sand out and he threw sleep sand at my fucking wife, and he said his dreams were \"This long\" and I said that's disgusting, so I'm making a callout post on my twitter dot com, Sandman, you've got short dreams, it's the length of a Compsci students sleep except WAY smaller, and guess what? Here's what my dreams look like: PFFFT, THAT'S RIGHT, BABY. ALL FUN, NO NIGHTMARES, ALOTTA PILLOWS. Look at that, it looks like Inception, but the lead wouldt date 2nd years. He dream cucked wife so guess what? I'm gonna put the Earth to sleep. THAT'S RIGHT THIS IS WHAT YOU GET, MY SUPER LASER SLEEP! Except I'm not gonna put the Earth to Sleep. I'm gonna go higher. I'M DOZING OFF ON THE MOON! HOW DO YOU LIKE THAT, METALLICA? I PUT THE MOON TO SLEEP YOU IDIOT! YOU HAVE 23 HOURS BEFORE THE SLEEP DROPLETS HIT THE FUCKING EARTH NOW GET OUT OF MY SIGHT BEFORE I SEND YOU TO DREAMLAND TOO.");
+        return await channel.send("https://tenor.com/bhOMg.gif");
+    }
+
+    if (response === "nightman") 
+        return await channel.send("The Nightman Cometh.....");
+
+    if (response === "rem") 
+        return await channel.send("https://cdn.discordapp.com/attachments/958369561307131965/959143838163804190/Screenshot_2022-03-31_183500.png");
+
+    if (response === "rember")
+        return await channel.send("Hello I'm the Bedtime Bot and I remember it so you don't have to!");
+
+    if (response === "spotify")
+        return await channel.send("https://open.spotify.com/track/5sICkBXVmaCQk5aISGR3x1?si=dc8aa47fd9774824");
+
+    assertNever(response);
 }
 
 async function getVCUsers(guild: Guild) {
@@ -168,10 +185,10 @@ client.once("ready", () => {
 client.on("interactionCreate", async interaction => {
     if (!interaction.isCommand()) return;
 
-    // if (!interaction.memberPermissions?.has([Permissions.FLAGS.ADMINISTRATOR])) {
-    //     interaction.reply({content: "admin only", ephemeral: true});
-    //     return;
-    // }
+    if (!interaction.memberPermissions?.has([Permissions.FLAGS.ADMINISTRATOR])) {
+        interaction.reply({content: "You must be an administrator to run this command.", ephemeral: true});
+        return;
+    }
 
     if (interaction.guildId) {
         const channelsToSend = readChannelsToSend();
@@ -187,16 +204,16 @@ client.on("interactionCreate", async interaction => {
                 ]
             );
 
-            interaction.reply({content:"done", ephemeral: true});
+            interaction.reply({content:"Success! Reminders will now be sent to this channel.", ephemeral: true});
         } else if (interaction.commandName === "stopreminding") {
             writeChannelsToSend(channelsToSend.filter(channelToSend => channelToSend.guild !== interaction.guildId));
 
-            interaction.reply({content:"done", ephemeral: true});
+            interaction.reply({content:"Success! Reminders will no longer be sent to this server.", ephemeral: true});
         }
-    } else interaction.reply({content: "no private messages please", ephemeral: true});
+    } else interaction.reply({content: "This service is not set to receive private messages.", ephemeral: true});
 });
 
-schedule('0 * * * *', async () => {
+schedule('0 22 * * *', async () => {
     findChannels();
 });
 
