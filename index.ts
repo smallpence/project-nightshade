@@ -64,7 +64,7 @@ async function findChannels() {
                           send2AM(guild, channel);
                       }
                     }
-                    catch (Exception e) {console.log(e);}
+                    catch (e) {console.log(e);}
                 });
         });
 }
