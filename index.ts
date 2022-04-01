@@ -271,7 +271,7 @@ client.on("interactionCreate", async interaction => {
     } else interaction.reply({content: "This service is not set to receive private messages.", ephemeral: true});
 });
 
-schedule('0 2 * * *', async () => {
+schedule('0 21,22,23,0,1,2 * * *', async () => {
     findChannels();
 });
 
