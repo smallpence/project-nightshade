@@ -12,7 +12,7 @@ const mentionResponses: Response[] = ["-15"];
 const CHANNELS_PATH = "channels.json";
 const LAST_PATH = "last.json";
 
-const tts = true;
+const tts = false;
 
 interface ChannelToSend {
     guild: string
