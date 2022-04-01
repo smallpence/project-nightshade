@@ -240,7 +240,7 @@ const client = new Client({intents: Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_V
 
 client.once("ready", () => {
     console.log("logged in!");
-    findChannels();
+    //findChannels();
 });
 
 client.on("interactionCreate", async interaction => {
