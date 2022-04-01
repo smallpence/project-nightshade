@@ -58,10 +58,13 @@ async function findChannels() {
             channels
                 .filter((_,id) => id === knownChannel)
                 .forEach(async channelPromise => {
-                    const channel = await channelPromise.fetch();
-                    if (channel.type === "GUILD_TEXT") {
-                        send2AM(guild, channel);
+                    try {
+                      const channel = await channelPromise.fetch();
+                      if (channel.type === "GUILD_TEXT") {
+                          send2AM(guild, channel);
+                      }
                     }
+                    catch (Exception e) {console.log(e);}
                 });
         });
 }
@@ -237,7 +240,7 @@ const client = new Client({intents: Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_V
 
 client.once("ready", () => {
     console.log("logged in!");
-    // findChannels();
+    findChannels();
 });
 
 client.on("interactionCreate", async interaction => {
