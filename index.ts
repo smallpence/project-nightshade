@@ -52,20 +52,22 @@ async function findChannels() {
         .forEach(async (guildPromise, id) => {
             const knownChannel = readChannelsToSend().find(channelToSend => channelToSend.guild === id)!!.channel;
             
-            const guild = await guildPromise.fetch();
-            const channels = await guild.channels.fetch();
+            try {
+                const guild = await guildPromise.fetch();
+                const channels = await guild.channels.fetch();
 
-            channels
-                .filter((_,id) => id === knownChannel)
-                .forEach(async channelPromise => {
-                    try {
-                      const channel = await channelPromise.fetch();
-                      if (channel.type === "GUILD_TEXT") {
-                          send2AM(guild, channel);
-                      }
-                    }
-                    catch (e) {console.log(e);}
-                });
+                channels
+                    .filter((_,id) => id === knownChannel)
+                    .forEach(async channelPromise => {
+                        try {
+                          const channel = await channelPromise.fetch();
+                          if (channel.type === "GUILD_TEXT") {
+                              send2AM(guild, channel);
+                          }
+                        }
+                        catch (e) {}
+                    });
+            } catch (e) {}
         });
 }
 
@@ -274,7 +276,7 @@ client.on("interactionCreate", async interaction => {
     } else interaction.reply({content: "This service is not set to receive private messages.", ephemeral: true});
 });
 
-schedule('0 21,22,23,0,1,2 * * *', async () => {
+schedule('0 2 * * *', async () => {
     findChannels();
 });
 
